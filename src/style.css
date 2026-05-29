@@ -1,65 +1,235 @@
+/* ─── 艺术留言板 · 美学重塑 ─── */
+
+/* 全局自定义属性 */
 :root {
-  --primary-color: #6366f1;
-  --primary-hover: #4f46e5;
-  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-  
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  line-height: 1.6;
+  /* 色彩系统 */
+  --primary: #5b4a8a;
+  --primary-light: #8b7ab8;
+  --primary-glow: rgba(91, 74, 138, 0.15);
+  --accent: #c4956a;
+  --accent-warm: #d4a574;
+  --ink-dark: #2c2438;
+  --ink-medium: #4a3f5c;
+  --ink-light: #6d5f8a;
+  --ink-faint: #9890a8;
+  --paper: #faf8f5;
+  --paper-warm: #f5f0ea;
+  --paper-deep: #ede8e0;
+  --glass-bg: rgba(255, 253, 250, 0.65);
+  --glass-border: rgba(180, 170, 195, 0.25);
+  --glass-highlight: rgba(255, 255, 255, 0.8);
+  --shadow-soft: 0 4px 24px rgba(44, 36, 56, 0.06);
+  --shadow-medium: 0 8px 40px rgba(44, 36, 56, 0.1);
+  --shadow-elevated: 0 16px 64px rgba(44, 36, 56, 0.12);
+
+  /* 字体 */
+  --font-serif: 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;
+  --font-display: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+  --font-body: 'Noto Serif SC', Georgia, serif;
+
+  /* 间距 */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  font-family: var(--font-body);
+  line-height: 1.8;
   font-weight: 400;
-  color: var(--text-main);
-  background: var(--bg-gradient);
+  color: var(--ink-dark);
+  background: var(--paper);
   min-height: 100vh;
   margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
   width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
+/* ─── 动态背景 ─── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(91, 74, 138, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 90%, rgba(196, 149, 106, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 60% 40%, rgba(139, 122, 184, 0.04) 0%, transparent 50%),
+    var(--paper);
+  animation: bg-shift 20s ease-in-out infinite alternate;
+}
+
+@keyframes bg-shift {
+  0% { opacity: 1; }
+  50% { opacity: 0.85; }
+  100% { opacity: 1; }
+}
+
+/* 浮动装饰圆 */
+body::after {
+  content: '';
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196, 149, 106, 0.04) 0%, transparent 70%);
+  top: -100px;
+  right: -100px;
+  z-index: -1;
+  animation: float-orb 15s ease-in-out infinite;
+}
+
+@keyframes float-orb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30px, 40px) scale(1.05); }
+  66% { transform: translate(20px, -20px) scale(0.95); }
+}
+
+/* ─── 应用容器 ─── */
 #app {
   width: 100%;
-  max-width: 800px;
-  padding: 2rem;
+  max-width: 780px;
+  padding: var(--space-lg) var(--space-md);
   margin: 0 auto;
+  position: relative;
 }
 
+/* ─── 标题 ─── */
 h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  margin-bottom: 2rem;
-  background: linear-gradient(to right, #6366f1, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  margin-bottom: var(--space-xl);
   text-align: center;
+  position: relative;
+  color: var(--ink-dark);
 }
 
+h1::before {
+  content: '「';
+  position: absolute;
+  left: -0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  color: var(--ink-faint);
+  opacity: 0.3;
+}
+
+h1::after {
+  content: '」';
+  position: absolute;
+  right: -0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  color: var(--ink-faint);
+  opacity: 0.3;
+}
+
+/* ─── 按钮基础 ─── */
 button {
   font-family: inherit;
   font-weight: 600;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-sm);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   cursor: pointer;
   border: none;
+  position: relative;
+  overflow: hidden;
 }
 
+button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+button:hover::after {
+  opacity: 1;
+}
+
+/* ─── 滚动条 ─── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-faint);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-light);
+}
+
+/* ─── 深色模式 ─── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    --glass-bg: rgba(30, 41, 59, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    --primary: #a08fd4;
+    --primary-light: #b8a8e0;
+    --primary-glow: rgba(160, 143, 212, 0.15);
+    --accent: #d4a574;
+    --accent-warm: #c4956a;
+    --ink-dark: #e8e2f0;
+    --ink-medium: #c4bdd4;
+    --ink-light: #a098b4;
+    --ink-faint: #6d6480;
+    --paper: #1a1520;
+    --paper-warm: #201a28;
+    --paper-deep: #2a2435;
+    --glass-bg: rgba(30, 25, 40, 0.7);
+    --glass-border: rgba(160, 143, 212, 0.12);
+    --glass-highlight: rgba(160, 143, 212, 0.05);
+    --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.2);
+    --shadow-medium: 0 8px 40px rgba(0, 0, 0, 0.25);
+    --shadow-elevated: 0 16px 64px rgba(0, 0, 0, 0.3);
+  }
+
+  body::before {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(160, 143, 212, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(212, 165, 116, 0.04) 0%, transparent 60%),
+      var(--paper);
+  }
+
+  body::after {
+    background: radial-gradient(circle, rgba(212, 165, 116, 0.03) 0%, transparent 70%);
+  }
+}
+
+/* ─── 响应式 ─── */
+@media (max-width: 640px) {
+  #app {
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  h1 {
+    font-size: 2rem;
+    letter-spacing: 0.1em;
   }
 }
